@@ -1,4 +1,7 @@
 import itertools
+from datetime import *; from dateutil.relativedelta import *
+from datetime import date
+from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth import get_user_model
@@ -81,17 +84,13 @@ def prepare_group_summary_emails(group, context):
 
 def calculate_group_summary_dates(group):
     with timezone.override(group.timezone):
-        tz = get_current_timezone()
+	dt = date.today()
+	midnight = datetime.combine(dt, datetime.min.time())
 
-        # midnight last night in the groups local timezone
-        midnight = tz.localize(timezone.now().replace(tzinfo=None, hour=0, minute=0, second=0, microsecond=0))
 
-        # 7 days before that
-        from_date = midnight - relativedelta(days=7)
+	from_date = midnight - relativedelta(days=6)
 
-        # a week after from date
-        to_date = from_date + relativedelta(days=7)
-
+	to_date = from_date + relativedelta(days=6)
         return from_date, to_date
 
 
